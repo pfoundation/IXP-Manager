@@ -93,6 +93,22 @@ int set allas;
     # RFC 8326 - facilitate Graceful BGP Session Shutdown
     if (65535, 0) ~ bgp_community then bgp_local_pref = 0;
 
+<?php if( $t->router->bgp_lc ): ?>
+    # Auto-append large communities when corresponding standard communities are detected.
+    # Per-peer variant: a standard community of (65501|65502|65503, peer) gets the
+    # large community (routeserverasn, 65501|65502|65503, peer) appended.
+    for pair pc in bgp_community do {
+        if pc.asn = 65501 then bgp_large_community.add( (routeserverasn, 65501, pc.data) );
+        if pc.asn = 65502 then bgp_large_community.add( (routeserverasn, 65502, pc.data) );
+        if pc.asn = 65503 then bgp_large_community.add( (routeserverasn, 65503, pc.data) );
+    }
+    # All-peers variant: a standard community of (routeserverasn, 65501|65502|65503) gets
+    # the large community (routeserverasn, 65501|65502|65503, 1|2|3) appended.
+    if (routeserverasn, 65501) ~ bgp_community then bgp_large_community.add( (routeserverasn, 65501, 1) );
+    if (routeserverasn, 65502) ~ bgp_community then bgp_large_community.add( (routeserverasn, 65502, 2) );
+    if (routeserverasn, 65503) ~ bgp_community then bgp_large_community.add( (routeserverasn, 65503, 3) );
+
+<?php endif; ?>
     # Filter small prefixes
 <?php if( $t->router->protocol == 6 ): ?>
     if ( net ~ [ ::/0{<?= config( 'ixp.irrdb.min_v6_subnet_size', 48 ) == 128 ? 128 : config( 'ixp.irrdb.min_v6_subnet_size', 48 ) + 1 ?>,128} ] ) then {
