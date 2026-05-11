@@ -57,6 +57,19 @@ define routeserveraddress = <?= $t->router->peering_ip ?>;
 
 router id <?= $t->router->router_id ?>;
 
+<?php if (env('BMP_TARGET_IP') && env('BMP_TARGET_PORT') ?>
+
+# BMP export for Akvorado
+protocol bmp {
+ station address ip <?= env('BMP_TARGET_IP') ?> port <?= env('BMP_TARGET_PORT') ?>;
+ system description "<?= $t->router->name ?> - IXP Route Server";
+ system name "<?= $t->router->name ?>";
+ monitoring rib in pre_policy true;
+ monitoring rib in post_policy true;
+ tx buffer limit 256;
+}
+<?php endif; ?>
+
 # ignore interface up/down events
 protocol device { }
 
