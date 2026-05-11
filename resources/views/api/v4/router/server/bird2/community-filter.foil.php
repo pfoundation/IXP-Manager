@@ -46,23 +46,23 @@ function ixp_community_filter(int peerasn)
 
 <?php if( $t->router->bgp_lc ): ?>
     # AS path prepending
-    if (routeserverasn, 103, peerasn) ~ bgp_large_community then {
+    if (routeserverasn, 103, peerasn) ~ bgp_large_community || (routeserverasn, 65503, peerasn) ~ bgp_large_community then {
         bgp_path.prepend( bgp_path.first );
         bgp_path.prepend( bgp_path.first );
         bgp_path.prepend( bgp_path.first );
-    } else if (routeserverasn, 102, peerasn) ~ bgp_large_community then {
+    } else if (routeserverasn, 102, peerasn) ~ bgp_large_community || (routeserverasn, 65502, peerasn) ~ bgp_large_community then {
         bgp_path.prepend( bgp_path.first );
         bgp_path.prepend( bgp_path.first );
-    } else if (routeserverasn, 101, peerasn) ~ bgp_large_community then {
+    } else if (routeserverasn, 101, peerasn) ~ bgp_large_community || (routeserverasn, 65501, peerasn) ~ bgp_large_community then {
         bgp_path.prepend( bgp_path.first );
-    } else if (routeserverasn, 103, 0) ~ bgp_large_community then {
-        bgp_path.prepend( bgp_path.first );
-        bgp_path.prepend( bgp_path.first );
-        bgp_path.prepend( bgp_path.first );
-    } else if (routeserverasn, 102, 0) ~ bgp_large_community then {
+    } else if (routeserverasn, 103, 0) ~ bgp_large_community || (routeserverasn, 65503, 3) ~ bgp_large_community then {
         bgp_path.prepend( bgp_path.first );
         bgp_path.prepend( bgp_path.first );
-    } else if (routeserverasn, 101, 0) ~ bgp_large_community then {
+        bgp_path.prepend( bgp_path.first );
+    } else if (routeserverasn, 102, 0) ~ bgp_large_community || (routeserverasn, 65502, 2) ~ bgp_large_community then {
+        bgp_path.prepend( bgp_path.first );
+        bgp_path.prepend( bgp_path.first );
+    } else if (routeserverasn, 101, 0) ~ bgp_large_community || (routeserverasn, 65501, 1) ~ bgp_large_community then {
         bgp_path.prepend( bgp_path.first );
     }
 
